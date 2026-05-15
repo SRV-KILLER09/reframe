@@ -4,7 +4,7 @@ import { useState, useCallback, useEffect, useRef } from "react";
 import { EditRecipe, ExportResult, ExportStatus, DEFAULT_RECIPE } from "@/lib/types";
 import { loadFFmpeg, exportVideo, terminateFFmpeg } from "@/lib/ffmpeg";
 
-const DEFAULT_TITLE = "Reframe — Resize, trim, and export videos in your browser";
+const DEFAULT_TITLE = "Reframe | Resize, trim, and export videos in your browser";
 
 function getVideoDuration(file: File): Promise<number> {
   return new Promise((resolve, reject) => {
