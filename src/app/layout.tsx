@@ -50,13 +50,17 @@ export default function RootLayout({
           <ErrorBoundary>
             <header
               role="banner"
-              className="navbar-glass sticky top-0 z-50 flex items-center justify-between px-8 py-4"
+              className="navbar-glass sticky top-0 z-50 px-4 py-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-4"
             >
-              <div className="flex flex-col gap-0">
-                <span className="text-2xl font-black text-[var(--accent)] heading-3d drop-shadow">REFRAME</span>
-                <span className="text-xs font-heading tracking-widest text-[var(--muted)] heading-3d -mt-1">Resize, trim, and export videos in your browser</span>
+              <div className="flex flex-col flex-1 min-w-0">
+                <span className="text-2xl font-black text-[var(--accent)] heading-3d drop-shadow whitespace-nowrap">REFRAME</span>
+                <span className="text-xs font-heading tracking-widest text-[var(--muted)] heading-3d -mt-1 truncate">Resize, trim, and export videos in your browser</span>
               </div>
-              <ThemeToggle />
+              <div className="flex flex-row items-center gap-4 flex-shrink-0 min-w-0 w-full sm:w-auto justify-end max-w-xs">
+                <ThemeToggle />
+                {/* GitHub Star button slot, if present */}
+                <div id="github-star-slot" className="ml-16 mr-20 sm:ml-14 sm:mr-16" />
+              </div>
             </header>
 
             <main role="main" id="main-content">
