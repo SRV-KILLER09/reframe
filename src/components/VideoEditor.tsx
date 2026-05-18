@@ -113,10 +113,11 @@ export default function VideoEditor() {
           </div>
         </header>
 
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-5">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_360px] gap-8 items-start">
 
-          <div className="space-y-4">
-            <div className="bg-[var(--surface)] rounded-xl p-5 border border-[var(--border)] animate-fade-in">
+          {/* Main Box */}
+          <div className="space-y-4 min-h-[600px] flex flex-col justify-start bg-white/10 border border-film-200 rounded-2xl shadow-xl backdrop-blur-md p-6 animate-fade-in">
+            <div className="bg-[var(--surface)] rounded-xl p-5 border border-[var(--border)]">
               <FileUpload onFileSelect={handleFileSelect} currentFile={file} fileError={fileError} />
 
               {!file && (
@@ -310,11 +311,12 @@ export default function VideoEditor() {
             )}
           </div>
 
+          {/* Side Features Box */}
           <div className={cn(
-            "space-y-5",
+            "space-y-5 min-h-[600px] flex flex-col justify-start bg-white/10 border border-film-200 rounded-2xl shadow-xl backdrop-blur-md p-6 animate-fade-in",
             isProcessing && "pointer-events-none opacity-50"
           )}>
-            <div className="bg-[var(--surface)] rounded-xl border border-[var(--border)] p-5 space-y-6 animate-fade-in" style={{ animationDelay: "50ms" }}>
+            <div className="bg-[var(--surface)] rounded-xl border border-[var(--border)] p-5 space-y-6" style={{ animationDelay: "50ms" }}>
               <Section icon={<Layers size={12} />} title="Output size">
                 {recommendedPreset && (
                   <div className="mb-4 rounded-2xl border border-film-200 bg-film-50 p-3 text-sm text-film-700">
@@ -334,8 +336,15 @@ export default function VideoEditor() {
                 <button
                   type="button"
                   onClick={resetSettings}
-                  className="text-sm font-heading font-bold uppercase tracking-widest text-[var(--muted)] hover:text-film-600 transition-all opacity-60 hover:opacity-100"
+                  className={cn(
+                    "flex items-center gap-2 px-5 py-2 rounded-xl font-heading font-bold uppercase tracking-widest text-sm transition-all duration-200",
+                    "bg-white/10 border border-film-200 shadow-sm backdrop-blur-md",
+                    "hover:bg-film-50 hover:text-film-600 hover:shadow-md active:scale-95",
+                    "text-[var(--muted)]"
+                  )}
+                  style={{ boxShadow: '0 2px 12px 0 rgba(0,0,0,0.04)' }}
                 >
+                  <RotateCw size={16} className="opacity-60 group-hover:opacity-100 transition-all" />
                   Reset all settings
                 </button>
               </div>
@@ -348,15 +357,39 @@ export default function VideoEditor() {
               aria-label='Export video'
               aria-disabled={!file || isProcessing ? "true" : undefined}
               className={cn(
-                "w-full flex items-center justify-center gap-3 py-5 rounded-xl",
+                "w-full flex items-center justify-center gap-3 py-5 rounded-xl relative overflow-hidden",
                 "font-display text-2xl tracking-widest transition-all duration-200",
                 file && !isProcessing
-                  ? "bg-film-600 hover:bg-film-700 hover:scale-[1.01] text-white shadow-lg shadow-film-200 active:scale-[0.98] cursor-pointer"
+                  ? "bg-gradient-to-r from-film-500 via-film-600 to-film-700 text-white shadow-xl shadow-film-300/30 hover:scale-[1.02] active:scale-[0.98] cursor-pointer group"
                   : "bg-[var(--border)] text-[var(--muted)] opacity-40 cursor-not-allowed"
               )}
             >
-              <Zap size={20} className={cn(file && !isProcessing && "animate-pulse")} />
-              {isProcessing ? "PROCESSING" : "EXPORT"}
+              {/* Shimmer effect */}
+              {file && !isProcessing && (
+                <span
+                  className="absolute left-0 top-0 h-full w-full pointer-events-none"
+                  aria-hidden="true"
+                >
+                  <span
+                    className="block h-full w-full bg-gradient-to-r from-transparent via-white/30 to-transparent animate-shimmer group-hover:opacity-80 opacity-60"
+                    style={{
+                      backgroundSize: '200% 100%',
+                      backgroundPosition: '200% 0',
+                    }}
+                  />
+                </span>
+              )}
+              <Zap size={24} className={cn(
+                file && !isProcessing ? "drop-shadow-lg text-yellow-300 animate-bounce-slow" : "",
+                isProcessing ? "animate-spin text-white/70" : ""
+              )} />
+              <span className="relative z-10 font-bold tracking-widest">
+                {isProcessing ? (
+                  <span className="animate-pulse">PROCESSING</span>
+                ) : (
+                  <span className="">EXPORT</span>
+                )}
+              </span>
             </button>
           </div>
         </div>
