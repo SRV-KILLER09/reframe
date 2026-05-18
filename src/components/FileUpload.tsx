@@ -108,15 +108,11 @@ export default function FileUpload({
  const FileInfo = () => (
   <div className="px-4 py-3 bg-film-50 border border-film-200 rounded-lg">
     <div className="flex flex-col lg:flex-row lg:items-center gap-3">
-
       <div className="flex items-start gap-3 flex-1 min-w-0">
-
         <div className="hidden lg:flex items-center justify-center w-9 h-9 rounded-lg bg-[var(--surface)] border border-[var(--border)] shrink-0">
           <Film size={16} className="text-film-600" />
         </div>
-
         <Film size={18} className="lg:hidden text-film-600 shrink-0 mt-0.5" />
-
         <div className="flex-1 min-w-0">
           <div className="flex flex-wrap items-center gap-2 mb-0.5">
             <p className="text-sm font-semibold text-gray-800 truncate max-w-[320px] xl:max-w-[420px]">
@@ -138,7 +134,6 @@ export default function FileUpload({
           </p>
         </div>
       </div>
-
       <button
         type="button"
         onClick={() => inputRef.current?.click()}
@@ -147,48 +142,14 @@ export default function FileUpload({
         Change
         <span className="text-[var(--muted)] ml-1">(Ctrl+O)</span>
       </button>
-
-
-      {fileError && (
-        <p className="text-xs text-red-500 mt-2 font-medium">
-          {fileError}
-        </p>
-      )}
-      <input
-        ref={inputRef}
-        type="file"
-        accept="video/*"
-        className="hidden"
-        onChange={(e) => {
-          const f = e.target.files?.[0];
-          if (f) handleFile(f);
-        }}
-      />
     </div>
-
     <p className="text-xs text-gray-500 mt-3 break-words">
       Supports: MP4, MOV, AVI, MKV, WebM, and most video formats
     </p>
-
-    {fileError && (
-      <p className="text-xs text-red-500 mt-2 font-medium">{fileError}</p>
-    )}
-
-    <input
-      ref={inputRef}
-      type="file"
-      accept="video/*"
-      className="hidden"
-      onChange={(e) => {
-        const f = e.target.files?.[0];
-        if (f) handleFile(f);
-      }}
-    />
   </div>
 );
   const DropZone = () => (
-    <div
-      role="button"
+    <label
       tabIndex={0}
       onDragOver={(e) => {
         e.preventDefault();
@@ -196,7 +157,6 @@ export default function FileUpload({
       }}
       onDragLeave={() => setDragging(false)}
       onDrop={handleDrop}
-      onClick={() => inputRef.current?.click()}
       onKeyDown={(e) => {
         if (e.key === "Enter" || e.key === " ") {
           inputRef.current?.click();
@@ -209,12 +169,20 @@ export default function FileUpload({
           ? "border-film-500 bg-film-50/50 scale-[1.02] shadow-[0_0_40px_-10px_rgba(230,57,70,0.4)] ring-4 ring-film-500/30"
           : "border-[var(--border)] bg-[var(--bg)] hover:border-film-400 hover:bg-film-50/40"
       )}
+      aria-label="Upload video file"
+      htmlFor="file-upload-input"
     >
+      {/* Upward Animated Red Arrow Icon (larger, better aligned) */}
+      <div className="flex justify-center items-center mb-4 mt-1">
+        <svg width="54" height="54" viewBox="0 0 54 54" fill="none" className="animate-bounce-up" aria-hidden="true">
+          <path d="M27 46V14M27 14l-10 10M27 14l10 10" stroke="#e63946" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
+      </div>
       {/* Premium Light Beam Shimmer Effect */}
       {dragging && (
-        <div className="absolute inset-0 -translate-x-full animate-shimmer bg-gradient-to-r from-transparent via-film-500/20 to-transparent pointer-events-none" />
+        <div className="absolute inset-0 -translate-x-full animate-shimmer bg-gradient-to-r from-transparent via-film-500/20 to-transparent pointer-events-none z-10" />
       )}
-      <div className="w-20 h-20 opacity-80 group-hover:opacity-100 transition-opacity group-hover:scale-110 duration-200">
+      <div className="w-20 h-20 opacity-80 group-hover:opacity-100 transition-opacity group-hover:scale-110 duration-200 z-20 pointer-events-none">
         <LottiePlayer animationData={uploadAnim} loop autoplay />
       </div>
 
@@ -243,36 +211,32 @@ export default function FileUpload({
         Supports: MP4, MOV, AVI, MKV, WebM, and most video formats up to 2GB
       </p>
 
-      {fileError && (
-        <p className="text-sm text-red-500 text-center">{fileError}</p>
+      {(fileError || error) && (
+        <p className="text-sm text-red-500 text-center mt-2 font-semibold animate-pulse">{fileError || error}</p>
       )}
 
-      {currentFile && (
-        <p className="text-xs text-[var(--muted)] mt-2">
-          Selected: {formatBytes(currentFile.size)}
-        </p>
+      {warning && (
+        <p className="text-sm text-yellow-500 text-center mt-2 font-semibold animate-pulse">{warning}</p>
       )}
 
-        <input
-          ref={inputRef}
-          type="file"
-          accept="video/*"
-          className="hidden"
-          onChange={(e) => {
-            const f = e.target.files?.[0];
-
-            if (f) handleFile(f);
-          }}
-        />
-      </div>
+      <input
+        id="file-upload-input"
+        ref={inputRef}
+        type="file"
+        accept="video/*"
+        className="hidden"
+        tabIndex={-1}
+        onClick={e => e.stopPropagation()}
+        onChange={(e) => {
+          const f = e.target.files?.[0];
+          if (f) handleFile(f);
+        }}
+      />
+    </label>
   );
 
   return (
     <div className="space-y-2">
-      {error && <p className="text-sm text-red-500">{error}</p>}
-
-      {warning && <p className="text-sm text-yellow-500">{warning}</p>}
-
       {currentFile ? <FileInfo /> : <DropZone />}
     </div>
   );
