@@ -34,7 +34,7 @@ export default function FileUpload({
 
   const [error, setError] = useState("");
   const [warning, setWarning] = useState("");
-  
+
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "o") {
